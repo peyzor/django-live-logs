@@ -1,0 +1,27 @@
+{% load static i18n %}
+
+<table id="log-entries" class="display" style="width:100%">
+    <thead>
+    <tr>
+        <th scope="col">{% trans 'No.' %}</th>
+        <th scope="col">{% trans 'Log entries' %}</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% if log_entries %}
+        {% for log_entry in log_entries %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ log_entry }}</td>
+            </tr>
+        {% endfor %}
+
+    {% else %}
+        <tr>
+            <td colspan="2">{% trans 'No entries!' %}</td>
+        </tr>
+    {% endif %}
+    </tbody>
+
+</table>

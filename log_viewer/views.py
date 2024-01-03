@@ -3,14 +3,15 @@ import zipfile
 from io import BytesIO
 from itertools import islice
 
-from django.http import HttpResponse, Http404
-from django.views.generic import TemplateView as _TemplateView
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.conf import settings as django_settings
 from django.contrib.admin.utils import quote, unquote
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse, Http404
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.utils.timezone import localtime, now
-from django.conf import settings as django_settings
+from django.views.generic import TemplateView as _TemplateView
 
 from log_viewer import settings
 from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin
@@ -147,7 +148,7 @@ class LogDownloadView(TemplateView):
             zip_buffer = BytesIO()
 
             with zipfile.ZipFile(
-                zip_buffer, "a", zipfile.ZIP_DEFLATED, False
+                    zip_buffer, "a", zipfile.ZIP_DEFLATED, False
             ) as zip_file:
                 for log_dir, log_files in log_file_result.items():
                     for log_file in log_files:
@@ -184,6 +185,13 @@ class LogViewerView(TemplateView):
         context["page_length"] = settings.LOG_VIEWER_PAGE_LENGTH
         context["files_per_page"] = settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE
         return context
+
+
+def log_entries_view(request, *args, **kwargs):
+    context = {
+        'log_entries': ['a', 'b', 'c']
+    }
+    return render(request, 'log_viewer/log_table.html', context)
 
 
 log_json = LogJsonView.as_view()

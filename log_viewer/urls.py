@@ -4,7 +4,8 @@ if django.VERSION >= (2, 0):
     from django.urls import re_path
 else:
     from django.conf.urls import url as re_path
-from .views import log_json, log_viewer, log_download
+
+from .views import log_json, log_viewer, log_download, log_entries_view
 
 app_name = "log_viewer"
 
@@ -34,4 +35,5 @@ urlpatterns = [
         log_viewer,
         name="log_file_view",
     ),
+    re_path(r'^log_entries/$', log_entries_view, name='log_entries'),
 ]
