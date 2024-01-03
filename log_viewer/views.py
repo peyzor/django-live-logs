@@ -14,7 +14,7 @@ from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
 
 from log_viewer import settings
-from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin
+from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
 
 
 class TemplateView(_TemplateView):
@@ -191,12 +191,9 @@ class LogViewerView(TemplateView):
 
 
 def log_entries_view(request, *args, **kwargs):
-    total = [i for i in range(100)]
-    import random
-    context = {
-        'log_entries': random.choices(total, k=random.randint(3, 8))
-    }
-    return render(request, 'log_viewer/log_table.html', context)
+    original_context = {'file_name': 'django_requests.log'}
+    context = get_log_entries_context(original_context)
+    return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
 
 
 log_json = LogJsonView.as_view()

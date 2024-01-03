@@ -1,9 +1,12 @@
 import os
 import re
 from fnmatch import fnmatch
+from itertools import islice
+
+from django.contrib.admin.utils import quote, unquote
 from django.http import JsonResponse
 
-from log_viewer import settings
+from . import settings
 
 
 def get_log_files(directory, max_items_per_page, current_page):
@@ -45,7 +48,7 @@ def get_log_files(directory, max_items_per_page, current_page):
         result["logs"] = {log_dir: list(set(all_log_files))}
         result["next_page_files"] = current_page + 1
         result["last_files"] = (
-            all_log_files.__len__() <= current_page * max_items_per_page
+                all_log_files.__len__() <= current_page * max_items_per_page
         )
 
     return result
@@ -115,3 +118,79 @@ class JSONResponseMixin:
         # objects -- such as Django model instances or querysets
         # -- can be serialized as JSON.
         return context
+
+
+def get_log_entries_context(original_context=None):
+    if not original_context:
+        original_context = {}
+
+    context = {}
+    page = original_context.get('page', 1)
+    file_name = original_context.get('file_name', '')
+
+    # Clean the `file_name` to avoid relative paths.
+    file_name = unquote(file_name).replace('/..', '').replace('..', '')
+    page = int(page)
+    current_file = file_name
+
+    lines_per_page = settings.LOG_VIEWER_MAX_READ_LINES
+    context['original_file_name'] = file_name
+    context['next_page'] = page + 1
+    context['log_files'] = []
+
+    log_file_data = get_log_files(
+        settings.LOG_VIEWER_FILES_DIR,
+        settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
+        1,
+    )
+    context['next_page_files'] = log_file_data['next_page_files']
+    context['last_files'] = log_file_data['last_files']
+
+    for log_dir, log_files in log_file_data['logs'].items():
+        for log_file in log_files:
+            display = os.path.join(log_dir, log_file)
+            uri = os.path.join(settings.LOG_VIEWER_FILES_DIR, display)
+
+            context['log_files'].append(
+                {
+                    quote(display): {
+                        'uri': uri,
+                        'display': display,
+                    }
+                }
+            )
+
+    if file_name:
+        try:
+            file_log = os.path.join(settings.LOG_VIEWER_FILES_DIR, file_name)
+            with open(file_log, encoding='utf8', errors='ignore') as file:
+                next_lines = list(
+                    islice(
+                        readlines_reverse(
+                            file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN
+                        ),
+                        (page - 1) * lines_per_page,
+                        page * lines_per_page,
+                    )
+                )
+
+                if len(next_lines) < lines_per_page:
+                    context['last'] = True
+                else:
+                    context['last'] = False
+                context['logs'] = next_lines
+                context['current_file'] = current_file
+                context['file'] = file
+
+        except Exception as error:
+            print(error)
+            pass
+    else:
+        context['last'] = True
+
+    if len(context['log_files']) > 0:
+        context['log_files'] = sorted(
+            context['log_files'], key=lambda x: sorted(x.items())
+        )
+
+    return context
