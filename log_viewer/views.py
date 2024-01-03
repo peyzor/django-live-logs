@@ -25,7 +25,10 @@ class TemplateView(_TemplateView):
 
 
 class LogJsonView(JSONResponseMixin, TemplateView):
-    def get_log_json(self, original_context={}):
+    def get_log_json(self, original_context=None):
+        if original_context is None:
+            original_context = {}
+
         context = {}
         page = original_context.get("page", 1)
         file_name = original_context.get("file_name", "")
