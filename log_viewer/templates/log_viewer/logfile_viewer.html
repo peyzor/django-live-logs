@@ -32,6 +32,7 @@
             integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
             crossorigin="anonymous">
     </script>
+    <script src="//unpkg.com/alpinejs"></script>
     <script src="{% static 'log_viewer/js/jquery.min.js' %}"></script>
     <script src="{% static 'log_viewer/js/jquery.dataTables.min.js' %}"></script>
 {% endblock %}
@@ -63,22 +64,31 @@
                             </div>
                         </div>
 
-                        <table id="log-entries" class="display" style="width:100%"
-                               hx-get="{% url 'log_viewer:log_entries' %}"
-                               hx-trigger="load delay:0s, every 5s"
-                               hx-target="#log-entries">
-                            <thead>
-                            <tr>
-                                <th scope="col">{% trans 'No.' %}</th>
-                                <th scope="col">{% trans 'Log entries' %}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td colspan="2">{% trans 'No entries!' %}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div x-data="{ live: false }">
+                            <table id="log-entries"
+                                   class="display"
+                                   style="width:100%"
+                                   hx-get="{% url 'log_viewer:log_entries' %}"
+                                   :hx-trigger="live ? 'load delay:0s, every 1s' : 'load delay:0s'"
+                                   hx-target="#log-entries-data"
+                                   hx-swap="outerHTML">
+                                <thead>
+                                <tr>
+                                    <th scope="col">{% trans 'No.' %}</th>
+                                    <th scope="col">{% trans 'Log entries' %}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="log-entries-data">
+                                <tr>
+                                    <td colspan="2">{% trans 'No entries!' %}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <button @click="live = !live"
+                                    x-text="live ? 'Stop' : 'Go Live'">
+                            </button>
+                        </div>
 
                     </div>
                 </form>
