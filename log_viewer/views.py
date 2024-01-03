@@ -195,6 +195,10 @@ def log_entries_view(request, *args, **kwargs):
     context = get_log_entries_context(original_context)
     return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
 
+def go_live(request, *args,**kwargs):
+    return render(request, 'log_viewer/go_live.html', context={})
+
+
 
 log_json = LogJsonView.as_view()
 log_viewer = LogViewerView.as_view()

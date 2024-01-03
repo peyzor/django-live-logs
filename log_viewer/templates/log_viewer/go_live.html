@@ -1,0 +1,21 @@
+{% load static i18n %}
+
+<table id="log-entries"
+       class="display"
+       style="width:100%"
+       hx-get="{% url 'log_viewer:log_entries' %}"
+       hx-trigger="load delay:0s, every 1s"
+       hx-target="#log-entries-data"
+       hx-swap="outerHTML">
+    <thead>
+    <tr>
+        <th scope="col">{% trans 'No.' %}</th>
+        <th scope="col">{% trans 'Log entries' %}</th>
+    </tr>
+    </thead>
+    <tbody id="log-entries-data">
+    <tr>
+        <td colspan="2">{% trans 'No entries!' %}</td>
+    </tr>
+    </tbody>
+</table>
