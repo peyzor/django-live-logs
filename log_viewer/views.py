@@ -188,8 +188,10 @@ class LogViewerView(TemplateView):
 
 
 def log_entries_view(request, *args, **kwargs):
+    total = [i for i in range(100)]
+    import random
     context = {
-        'log_entries': ['a', 'b', 'c']
+        'log_entries': random.choices(total, k=random.randint(3, 8))
     }
     return render(request, 'log_viewer/log_table.html', context)
 
