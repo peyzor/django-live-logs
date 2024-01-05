@@ -1,6 +1,6 @@
-{% extends "admin/base_site.html" %}
+{% extends 'admin/base_site.html' %}
 {% load static i18n %}
-{% block title %}{% trans "Django Log Viewer" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans 'Django Log Viewer' %} - {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
     <div class="breadcrumbs">
@@ -10,7 +10,7 @@
             {% if custom_file_list_title %}
                 {{ custom_file_list_title }}
             {% else %}
-                {% trans "Django Log Viewer" %}
+                {% trans 'Django Log Viewer' %}
             {% endif %}</a>
     </div>
 {% endblock %}
@@ -38,7 +38,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="django__log__viewer ">
+    <div class="django_live_logs">
         <div id="content-main">
             <div class="module filtered" id="changelist">
                 <form id="changelist-form" class="changelist-form-container">
@@ -48,18 +48,18 @@
                                 {% if custom_file_list_title %}
                                     {{ custom_file_list_title }}
                                 {% else %}
-                                    {% trans "Django Log Viewer" %}
+                                    {% trans 'Django Log Viewer' %}
                                 {% endif %}
                             </h1>
                             <div class="download-buttons">
                                 <a href="{% url 'log_viewer:log_download_zip_view' %}"
                                    class="btn-download pull-right">
-                                    {% trans "Download all Log Files" %}
+                                    {% trans 'Download all Log Files' %}
                                 </a>
                                 <a href="{% url 'log_viewer:log_download_file_view' %}"
                                    class="btn-download pull-right btn-download-this-log"
                                    style="display:none">
-                                    {% trans "Download this Log File" %}
+                                    {% trans 'Download this Log File' %}
                                 </a>
                             </div>
                         </div>
