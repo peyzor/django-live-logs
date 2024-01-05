@@ -28,11 +28,8 @@
 
 {% block extrahead %}
     {{ block.super }}
-    <script src="https://unpkg.com/htmx.org@1.9.10"
-            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
-            crossorigin="anonymous">
-    </script>
-    <script src="//unpkg.com/alpinejs"></script>
+    <script src={% static 'log_viewer/js/htmx.min.js' %}></script>
+    <script src="{% static 'log_viewer/js/alpinejs.min.js' %}"></script>
     <script src="{% static 'log_viewer/js/jquery.min.js' %}"></script>
     <script src="{% static 'log_viewer/js/jquery.dataTables.min.js' %}"></script>
 {% endblock %}
