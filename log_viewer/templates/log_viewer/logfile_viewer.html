@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/changelists.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'log_viewer/css/jquery.dataTables.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'log_viewer/css/log_viewer.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'log_viewer/css/bootstrap-5.3.2-dist/css/bootstrap.css' %}">
 
     {% if custom_style_file %}
         <link type="text/css" href="{{ custom_style_file }}" rel="stylesheet">
@@ -32,6 +33,7 @@
     <script src="{% static 'log_viewer/js/alpinejs.min.js' %}"></script>
     <script src="{% static 'log_viewer/js/jquery.min.js' %}"></script>
     <script src="{% static 'log_viewer/js/jquery.dataTables.min.js' %}"></script>
+    <script src={% static 'log_viewer/css/bootstrap-5.3.2-dist/js/bootstrap.js' %}></script>
 {% endblock %}
 
 {% block content %}
