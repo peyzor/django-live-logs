@@ -35,21 +35,15 @@ def get_log_files(directory, max_items_per_page, current_page):
     for root, _, files in os.walk(directory):
         all_files = list(filter(lambda x: x.find("~") == -1, files))
 
-        all_log_files.extend(
-            list(filter(lambda x: x in settings.LOG_VIEWER_FILES, all_files))
-        )
-        all_log_files.extend(
-            [x for x in all_files if fnmatch(x, settings.LOG_VIEWER_FILES_PATTERN)]
-        )
+        all_log_files.extend(list(filter(lambda x: x in settings.LOG_VIEWER_FILES, all_files)))
+        all_log_files.extend([x for x in all_files if fnmatch(x, settings.LOG_VIEWER_FILES_PATTERN)])
         log_dir = os.path.relpath(root, directory)
         if log_dir == ".":
             log_dir = ""
 
         result["logs"] = {log_dir: list(set(all_log_files))}
         result["next_page_files"] = current_page + 1
-        result["last_files"] = (
-                all_log_files.__len__() <= current_page * max_items_per_page
-        )
+        result["last_files"] = (all_log_files.__len__() <= current_page * max_items_per_page)
 
     return result
 
@@ -138,11 +132,7 @@ def get_log_entries_context(original_context=None):
     context['next_page'] = page + 1
     context['log_files'] = []
 
-    log_file_data = get_log_files(
-        settings.LOG_VIEWER_FILES_DIR,
-        settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
-        1,
-    )
+    log_file_data = get_log_files(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE, 1, )
     context['next_page_files'] = log_file_data['next_page_files']
     context['last_files'] = log_file_data['last_files']
 
@@ -151,28 +141,14 @@ def get_log_entries_context(original_context=None):
             display = os.path.join(log_dir, log_file)
             uri = os.path.join(settings.LOG_VIEWER_FILES_DIR, display)
 
-            context['log_files'].append(
-                {
-                    quote(display): {
-                        'uri': uri,
-                        'display': display,
-                    }
-                }
-            )
+            context['log_files'].append({quote(display): {'uri': uri, 'display': display, }})
 
     if file_name:
         try:
             file_log = os.path.join(settings.LOG_VIEWER_FILES_DIR, file_name)
             with open(file_log, encoding='utf8', errors='ignore') as file:
-                next_lines = list(
-                    islice(
-                        readlines_reverse(
-                            file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN
-                        ),
-                        (page - 1) * lines_per_page,
-                        page * lines_per_page,
-                    )
-                )
+                next_lines = list(islice(readlines_reverse(file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN),
+                    (page - 1) * lines_per_page, page * lines_per_page, ))
 
                 if len(next_lines) < lines_per_page:
                     context['last'] = True
@@ -189,8 +165,25 @@ def get_log_entries_context(original_context=None):
         context['last'] = True
 
     if len(context['log_files']) > 0:
-        context['log_files'] = sorted(
-            context['log_files'], key=lambda x: sorted(x.items())
-        )
+        context['log_files'] = sorted(context['log_files'], key=lambda x: sorted(x.items()))
 
     return context
+
+
+# todo?? how to check 286
+def event_finished(request, *args, **kwargs):
+    is_hx_request = 'HX-Request' in request.headers
+    if is_hx_request:
+        response_status_code = request.META.get('HTTP_STATUS')
+        # response_status_code = request.headers.get('HX-Status')
+
+        if response_status_code == 286:
+            return True
+        elif response_status_code is None:
+            # Request not yet processed, check again on subsequent request
+            return False
+        else:
+            return False
+    else:
+        # Handle non-HTMX requests or responses with status codes other than 286
+        return False

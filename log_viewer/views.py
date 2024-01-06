@@ -12,9 +12,11 @@ from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
+from django_htmx.http import HttpResponseStopPolling
 
 from log_viewer import settings
-from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
+from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context, \
+    event_finished
 
 
 class TemplateView(_TemplateView):
@@ -43,11 +45,8 @@ class LogJsonView(JSONResponseMixin, TemplateView):
         context["next_page"] = page + 1
         context["log_files"] = []
 
-        log_file_data = get_log_files(
-            settings.LOG_VIEWER_FILES_DIR,
-            settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
-            1,
-        )
+        log_file_data = get_log_files(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
+            1, )
         context["next_page_files"] = log_file_data["next_page_files"]
         context["last_files"] = log_file_data["last_files"]
 
@@ -56,28 +55,14 @@ class LogJsonView(JSONResponseMixin, TemplateView):
                 display = os.path.join(log_dir, log_file)
                 uri = os.path.join(settings.LOG_VIEWER_FILES_DIR, display)
 
-                context["log_files"].append(
-                    {
-                        quote(display): {
-                            "uri": uri,
-                            "display": display,
-                        }
-                    }
-                )
+                context["log_files"].append({quote(display): {"uri": uri, "display": display, }})
 
         if file_name:
             try:
                 file_log = os.path.join(settings.LOG_VIEWER_FILES_DIR, file_name)
                 with open(file_log, encoding="utf8", errors="ignore") as file:
-                    next_lines = list(
-                        islice(
-                            readlines_reverse(
-                                file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN
-                            ),
-                            (page - 1) * lines_per_page,
-                            page * lines_per_page,
-                        )
-                    )
+                    next_lines = list(islice(readlines_reverse(file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN),
+                        (page - 1) * lines_per_page, page * lines_per_page, ))
 
                     if len(next_lines) < lines_per_page:
                         context["last"] = True
@@ -94,9 +79,7 @@ class LogJsonView(JSONResponseMixin, TemplateView):
             context["last"] = True
 
         if len(context["log_files"]) > 0:
-            context["log_files"] = sorted(
-                context["log_files"], key=lambda x: sorted(x.items())
-            )
+            context["log_files"] = sorted(context["log_files"], key=lambda x: sorted(x.items()))
 
         return context
 
@@ -123,11 +106,8 @@ class LogDownloadView(TemplateView):
     def render_to_response(self, context, **response_kwargs):
         # file_name = context.get('file_name', None)
         file_name = self.request.GET.get("file_name", None)
-        log_file_result = get_log_files(
-            settings.LOG_VIEWER_FILES_DIR,
-            settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
-            1,
-        )["logs"]
+        log_file_result = \
+        get_log_files(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE, 1, )["logs"]
 
         if file_name:
             file_path = unquote(file_name)
@@ -150,9 +130,7 @@ class LogDownloadView(TemplateView):
             zip_filename = "log_%s.zip" % generation_time.strftime("%Y%m%dT%H%M%S")
             zip_buffer = BytesIO()
 
-            with zipfile.ZipFile(
-                    zip_buffer, "a", zipfile.ZIP_DEFLATED, False
-            ) as zip_file:
+            with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
                 for log_dir, log_files in log_file_result.items():
                     for log_file in log_files:
                         display = os.path.join(log_dir, log_file)
@@ -195,9 +173,17 @@ def log_entries_view(request, *args, **kwargs):
     context = get_log_entries_context(original_context)
     return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
 
-def go_live(request, *args,**kwargs):
+
+def go_live(request, *args, **kwargs):
     return render(request, 'log_viewer/go_live.html', context={})
 
+
+def go_live(request, *args, **kwargs):
+    if event_finished(request):
+        return HttpResponseStopPolling()
+    else:
+        # Event is still ongoing, return regular response
+        return render(request, 'log_viewer/go_live.html', context={})
 
 
 log_json = LogJsonView.as_view()
