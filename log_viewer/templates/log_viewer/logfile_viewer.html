@@ -62,6 +62,16 @@
                                 </a>
                             </div>
                         </div>
+                        <div x-data="{ live: false }" >
+                            <button @click="live = !live"
+                                    x-text="live ? 'Stop' : 'Go Live'"
+                                    hx-get="{% url 'log_viewer:go_live' %}"
+                                    hx-trigger="click"
+                                    hx-target="#log-entries"
+                                    hx-swap="outerHTML"
+                                    class="btn-download pull-right">
+                            </button>
+                        </div>
 
                         <div x-data="{ live: false }">
                             <table id="log-entries"
@@ -83,13 +93,6 @@
                                 </tr>
                                 </tbody>
                             </table>
-
-                            <button @click="live = !live"
-                                    x-text="live ? 'Stop' : 'Go Live'"
-                                    hx-get="{% url 'log_viewer:go_live' %}"
-                                    hx-target="#log-entries"
-                                    hx-swap="outerHTML">
-                            </button>
                         </div>
 
                     </div>
