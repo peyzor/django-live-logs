@@ -63,15 +63,23 @@
                             </div>
                         </div>
 
-                        <div x-data="{ live: false }">
+                        <div x-data="{ live: false }"
+                             @click="live = !live"
+                             hx-trigger="click"
+                             hx-target="#log-entries"
+                             hx-swap="outerHTML"
+                        >
                             <button id="live-button"
-                                    @click="live = !live"
-                                    :class="live ? 'btn btn-outline-primary pull-right' : 'btn btn-outline-danger pull-right'"
-                                    x-text="live ? 'Stop' : 'Live'"
-                                    hx-get="{% url 'log_viewer:toggle_live' 0 %}"
-                                    hx-trigger="click"
-                                    hx-target="#log-entries"
-                                    hx-swap="outerHTML">
+                                    x-show="!live"
+                                    class="btn btn-outline-danger pull-right"
+                                    hx-get="{% url 'log_viewer:toggle_live' 0 %}">
+                                Live
+                            </button>
+                            <button id="stop-button"
+                                    x-show="live"
+                                    class="btn btn-outline-primary pull-right"
+                                    hx-get="{% url 'log_viewer:toggle_live' 1 %}">
+                                Stop
                             </button>
                         </div>
 

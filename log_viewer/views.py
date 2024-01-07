@@ -174,7 +174,7 @@ def log_entries_view(request, *args, **kwargs):
 
 
 def toggle_live(request, event, *args, **kwargs):
-    if event == 1:
+    if int(event) == 1:
         return HttpResponseStopPolling()
 
     # Event is still ongoing, return regular response
