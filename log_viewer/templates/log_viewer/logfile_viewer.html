@@ -62,40 +62,39 @@
                                 </a>
                             </div>
                         </div>
-                        <div x-data="{ live: false }" >
+
+                        <div x-data="{ live: false }">
                             <button @click="live = !live"
-                                    x-text="live ? 'Stop' : 'Go Live'"
-                                    hx-get="{% url 'log_viewer:go_live' %}"
+                                    :class="live ? 'btn btn-outline-primary pull-right' : 'btn btn-outline-danger pull-right'"
+                                    x-text="live ? 'Stop' : 'Live'"
+                                    hx-get="{% url 'log_viewer:toggle_live' 1 %}"
                                     hx-trigger="click"
                                     hx-target="#log-entries"
-                                    hx-swap="outerHTML"
-                                    class="btn-download pull-right">
+                                    hx-swap="outerHTML">
                             </button>
                         </div>
 
-                        <div x-data="{ live: false }">
-                            <table id="log-entries"
-                                   class="display"
-                                   style="width:100%"
-                                   hx-get="{% url 'log_viewer:log_entries' %}"
-                                   hx-trigger="load delay:0s"
-                                   hx-target="#log-entries-data"
-                                   hx-swap="outerHTML">
-                                <thead>
-                                <tr>
-                                    <th scope="col">{% trans 'No.' %}</th>
-                                    <th scope="col">{% trans 'Log entries' %}</th>
-                                </tr>
-                                </thead>
-                                <tbody id="log-entries-data">
-                                <tr>
-                                    <td colspan="2">{% trans 'No entries!' %}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
+                        <table id="log-entries"
+                               class="display"
+                               style="width:100%"
+                               hx-get="{% url 'log_viewer:log_entries' %}"
+                               hx-trigger="load delay:0s, every 2s"
+                               hx-target="#log-entries-data"
+                               hx-swap="outerHTML">
+                            <thead>
+                            <tr>
+                                <th scope="col">{% trans 'No.' %}</th>
+                                <th scope="col">{% trans 'Log entries' %}</th>
+                            </tr>
+                            </thead>
+                            <tbody id="log-entries-data">
+                            <tr>
+                                <td colspan="2">{% trans 'No entries!' %}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
+
                 </form>
                 <div id="changelist-filter">
                     <h2>{% trans 'Log Files' %}</h2>
