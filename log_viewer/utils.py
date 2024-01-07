@@ -148,7 +148,7 @@ def get_log_entries_context(original_context=None):
             file_log = os.path.join(settings.LOG_VIEWER_FILES_DIR, file_name)
             with open(file_log, encoding='utf8', errors='ignore') as file:
                 next_lines = list(islice(readlines_reverse(file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN),
-                    (page - 1) * lines_per_page, page * lines_per_page, ))
+                                         (page - 1) * lines_per_page, page * lines_per_page, ))
 
                 if len(next_lines) < lines_per_page:
                     context['last'] = True
@@ -170,7 +170,6 @@ def get_log_entries_context(original_context=None):
     return context
 
 
-# todo?? how to check 286
 def event_finished(request, *args, **kwargs):
     is_hx_request = 'HX-Request' in request.headers
     if is_hx_request:

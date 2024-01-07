@@ -64,10 +64,11 @@
                         </div>
 
                         <div x-data="{ live: false }">
-                            <button @click="live = !live"
+                            <button id="live-button"
+                                    @click="live = !live"
                                     :class="live ? 'btn btn-outline-primary pull-right' : 'btn btn-outline-danger pull-right'"
                                     x-text="live ? 'Stop' : 'Live'"
-                                    hx-get="{% url 'log_viewer:toggle_live' 1 %}"
+                                    hx-get="{% url 'log_viewer:toggle_live' 0 %}"
                                     hx-trigger="click"
                                     hx-target="#log-entries"
                                     hx-swap="outerHTML">
@@ -78,7 +79,7 @@
                                class="display"
                                style="width:100%"
                                hx-get="{% url 'log_viewer:log_entries' %}"
-                               hx-trigger="load delay:0s, every 2s"
+                               hx-trigger="load delay:0s"
                                hx-target="#log-entries-data"
                                hx-swap="outerHTML">
                             <thead>
