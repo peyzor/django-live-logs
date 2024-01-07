@@ -30,7 +30,7 @@
 {% block extrahead %}
     {{ block.super }}
     <script src={% static 'log_viewer/js/htmx.min.js' %}></script>
-    <script src="{% static 'log_viewer/js/alpinejs.min.js' %}"></script>
+    <script src="{% static 'log_viewer/js/alpinejs.min.js' %}" defer></script>
     <script src="{% static 'log_viewer/js/jquery.min.js' %}"></script>
     <script src="{% static 'log_viewer/js/jquery.dataTables.min.js' %}"></script>
     <script src={% static 'log_viewer/css/bootstrap-5.3.2-dist/js/bootstrap.js' %}></script>
