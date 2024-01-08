@@ -4,7 +4,7 @@
 {% if log_entries %}
     {% for log_entry in log_entries %}
         <tr>
-            <td>{{ forloop.counter }}</td>
+            <th scope="row">{{ forloop.counter }}</th>
             <td>{{ log_entry }}</td>
         </tr>
     {% endfor %}
