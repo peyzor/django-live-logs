@@ -5,19 +5,18 @@
 {% block breadcrumbs %}
     <div class="breadcrumbs">
         <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-        &rsaquo;
         <a href="{% url 'log_viewer:log_file_view' %}">
             {% if custom_file_list_title %}
                 {{ custom_file_list_title }}
             {% else %}
                 {% trans 'Django Log Viewer' %}
-            {% endif %}</a>
+            {% endif %}
+        </a>
     </div>
 {% endblock %}
 
 {% block extrastyle %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/changelists.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'log_viewer/css/bootstrap-5.3.2-dist/css/bootstrap.css' %}">
 
     {% if custom_style_file %}
@@ -46,17 +45,6 @@
                                     {% trans 'Django Log Viewer' %}
                                 {% endif %}
                             </h1>
-                            <div class="download-buttons">
-                                <a href="{% url 'log_viewer:log_download_zip_view' %}"
-                                   class="btn-download pull-right">
-                                    {% trans 'Download all Log Files' %}
-                                </a>
-                                <a href="{% url 'log_viewer:log_download_file_view' %}"
-                                   class="btn-download pull-right btn-download-this-log"
-                                   style="display:none">
-                                    {% trans 'Download this Log File' %}
-                                </a>
-                            </div>
                         </div>
 
                         <div x-data="{ live: false }">
@@ -66,9 +54,9 @@
                                     hx-trigger="click"
                                     hx-target="#log-entries-table"
                                     hx-swap="outerHTML"
-                                    class="btn btn-outline-danger pull-right"
+                                    class="btn btn-outline-danger"
                                     hx-get="{% url 'log_viewer:toggle_live' 0 %}">
-                                Live
+                                {% trans 'Live' %}
                             </button>
                             <button id="stop-button"
                                     x-show="live"
@@ -76,9 +64,17 @@
                                     hx-trigger="click"
                                     hx-target="#log-entries-table"
                                     hx-swap="outerHTML"
-                                    class="btn btn-outline-primary pull-right"
+                                    class="btn btn-outline-primary"
                                     hx-get="{% url 'log_viewer:toggle_live' 1 %}">
-                                Stop
+                                {% trans 'Stop' %}
+                            </button>
+                            <button id="download-button"
+                                    class="btn btn-outline-primary">
+                                {% trans 'Download Log File' %}
+                            </button>
+                            <button id="download-all-button"
+                                    class="btn btn-outline-primary">
+                                {% trans 'Download All Log Files' %}
                             </button>
                         </div>
 
@@ -103,7 +99,7 @@
                     </div>
 
                 </form>
-                <div id="changelist-filter">
+                <div>
                     <h2>{% trans 'Log Files' %}</h2>
                     <table id="log-files-list" class="table" style="width:100%">
                         <tbody>
