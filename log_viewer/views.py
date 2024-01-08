@@ -6,13 +6,14 @@ from itertools import islice
 from django.conf import settings as django_settings
 from django.contrib.admin.utils import quote, unquote
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, Http404
+from django.http import Http404
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
-from django_htmx.http import HttpResponseStopPolling
+from django_htmx.http import HTMX_STOP_POLLING
 
 from log_viewer import settings
 from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
@@ -175,9 +176,8 @@ def log_entries_view(request, *args, **kwargs):
 
 def toggle_live(request, event, *args, **kwargs):
     if int(event) == 1:
-        return HttpResponseStopPolling()
+        return render(request, 'log_viewer/log_entries.html', status=HTMX_STOP_POLLING)
 
-    # Event is still ongoing, return regular response
     return render(request, 'log_viewer/toggle_live.html', context={})
 
 

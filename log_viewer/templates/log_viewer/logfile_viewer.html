@@ -72,7 +72,8 @@
                             <button id="live-button"
                                     x-show="!live"
                                     class="btn btn-outline-danger pull-right"
-                                    hx-get="{% url 'log_viewer:toggle_live' 0 %}">
+                                    hx-get="{% url 'log_viewer:toggle_live' 0 %}"
+                                    >
                                 Live
                             </button>
                             <button id="stop-button"
