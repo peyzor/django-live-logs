@@ -30,6 +30,8 @@
     <script src={% static 'log_viewer/js/htmx.min.js' %}></script>
     <script src="{% static 'log_viewer/js/alpinejs.min.js' %}" defer></script>
     <script src={% static 'log_viewer/css/bootstrap-5.3.2-dist/js/bootstrap.js' %}></script>
+    <script src="https://kit.fontawesome.com/7773a61110.js" crossorigin="anonymous"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -113,4 +115,15 @@
             </div>
         </div>
     </div>
+        <script>
+
+        Alpine.magic('clipboard', () => {
+        return subject => navigator.clipboard.writeText(subject);
+    });
+
+    function copyRow(content) {
+        Alpine.store('copiedText', 'Copied!');
+        navigator.clipboard.writeText(content);
+    }
 {% endblock %}
+</script>

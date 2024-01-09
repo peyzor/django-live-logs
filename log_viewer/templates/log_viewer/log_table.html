@@ -5,7 +5,11 @@
     {% for log_entry in log_entries %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ log_entry }}</td>
+            <td>{{ log_entry }}
+                <buttton @click="navigator.clipboard.writeText('hellooo')">
+                    <i class="fa-solid fa-copy xd"></i>
+                </buttton>
+            </td>
         </tr>
     {% endfor %}
 
@@ -14,4 +18,5 @@
         <td colspan="2">{% trans 'No entries!' %}</td>
     </tr>
 {% endif %}
+
 </tbody>
