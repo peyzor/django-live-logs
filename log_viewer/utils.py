@@ -168,21 +168,3 @@ def get_log_entries_context(original_context=None):
         context['log_files'] = sorted(context['log_files'], key=lambda x: sorted(x.items()))
 
     return context
-
-
-def event_finished(request, *args, **kwargs):
-    is_hx_request = 'HX-Request' in request.headers
-    if is_hx_request:
-        response_status_code = request.META.get('HTTP_STATUS')
-        # response_status_code = request.headers.get('HX-Status')
-
-        if response_status_code == 286:
-            return True
-        elif response_status_code is None:
-            # Request not yet processed, check again on subsequent request
-            return False
-        else:
-            return False
-    else:
-        # Handle non-HTMX requests or responses with status codes other than 286
-        return False
