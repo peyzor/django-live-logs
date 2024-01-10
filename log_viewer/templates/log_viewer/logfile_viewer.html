@@ -113,15 +113,4 @@
             </div>
         </div>
     </div>
-    <script>
-
-    Alpine.magic('clipboard', () => {
-        return subject => navigator.clipboard.writeText(subject);
-    });
-
-    function copyRow(content) {
-        Alpine.store('copiedText', 'Copied!');
-        navigator.clipboard.writeText(content);
-    }
 {% endblock %}
-</script>
