@@ -3,10 +3,10 @@
 <tbody id="log-entries-data" x-data="{ copiedValue: '' }">
 {% if log_entries %}
     {% for log_entry in log_entries %}
-        <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ log_entry }}
-                <buttton @click="copyText($event)">
+        <tr class="hover:bg-gray-100">
+            <th scope="row" class="border p-2">{{ forloop.counter }}</th>
+            <td class="border p-2 relative">{{ log_entry }}
+                <buttton @click="copyText($event)" class="absolute top-0 right-0 p-2 focus:outline-none">
                     <i class="fa-solid fa-copy copy-icon"></i>
                 </buttton>
             </td>
@@ -14,7 +14,7 @@
     {% endfor %}
 
 {% else %}
-    <tr>
+    <tr class="hover:bg-gray-100">
         <td colspan="2">{% trans 'No entries!' %}</td>
     </tr>
 {% endif %}
