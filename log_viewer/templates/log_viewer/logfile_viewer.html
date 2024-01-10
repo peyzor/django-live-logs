@@ -33,74 +33,82 @@
 {% endblock %}
 
 {% block content %}
-    <div>
-        <div>
-            <div>
-                <form>
-                    <div>
-                        <div>
-                            <h1>
-                                {% if custom_file_list_title %}
-                                    {{ custom_file_list_title }}
-                                {% else %}
-                                    {% trans 'Django Log Viewer' %}
-                                {% endif %}
-                            </h1>
+    <div class="p-4">
+        <div class="max-w-screen-lg mx-auto flex">
+            <div class="flex-1">
+                <div class="bg-white shadow-md p-6">
+                    <form>
+                        <div class="mb-6">
+                            <div class="mb-4">
+                                <h1 class="text-3xl font-bold">
+                                    {% if custom_file_list_title %}
+                                        {{ custom_file_list_title }}
+                                    {% else %}
+                                        {% trans 'Django Log Viewer' %}
+                                    {% endif %}
+                                </h1>
+                            </div>
+
+                            <div x-data="{ live: false }" class="space-x-2">
+                                <button id="live-button"
+                                        x-show="!live"
+                                        @click="live = !live"
+                                        hx-trigger="click"
+                                        hx-target="#log-entries-table"
+                                        hx-swap="outerHTML"
+                                        hx-get="{% url 'log_viewer:toggle_live' 0 %}"
+                                        class="bg-blue-500 text-white px-4 py-2 rounded">
+                                    {% trans 'Live' %}
+                                </button>
+                                <button id="stop-button"
+                                        x-show="live"
+                                        @click="live = !live"
+                                        hx-trigger="click"
+                                        hx-target="#log-entries-table"
+                                        hx-swap="outerHTML"
+                                        hx-get="{% url 'log_viewer:toggle_live' 1 %}"
+                                        class="bg-red-500 text-white px-4 py-2 rounded">
+                                    {% trans 'Stop' %}
+                                </button>
+                                <button id="download-button" class="bg-green-500 text-white px-4 py-2 rounded">
+                                    {% trans 'Download Log File' %}
+                                </button>
+                                <button id="download-all-button" class="bg-purple-500 text-white px-4 py-2 rounded">
+                                    {% trans 'Download All Log Files' %}
+                                </button>
+                            </div>
+
+                            <table id="log-entries-table"
+                                   hx-get="{% url 'log_viewer:log_entries' %}"
+                                   hx-trigger="load delay:0s"
+                                   hx-target="#log-entries-data"
+                                   hx-swap="outerHTML"
+                                   class="mt-6 w-full border-collapse">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="border p-2">{% trans 'No.' %}</th>
+                                    <th scope="col" class="border p-2">{% trans 'Log entries' %}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="log-entries-data">
+                                <tr>
+                                    <td colspan="2" class="border p-2">{% trans 'No entries!' %}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div x-data="{ live: false }">
-                            <button id="live-button"
-                                    x-show="!live"
-                                    @click="live = !live"
-                                    hx-trigger="click"
-                                    hx-target="#log-entries-table"
-                                    hx-swap="outerHTML"
-                                    hx-get="{% url 'log_viewer:toggle_live' 0 %}">
-                                {% trans 'Live' %}
-                            </button>
-                            <button id="stop-button"
-                                    x-show="live"
-                                    @click="live = !live"
-                                    hx-trigger="click"
-                                    hx-target="#log-entries-table"
-                                    hx-swap="outerHTML"
-                                    hx-get="{% url 'log_viewer:toggle_live' 1 %}">
-                                {% trans 'Stop' %}
-                            </button>
-                            <button id="download-button">
-                                {% trans 'Download Log File' %}
-                            </button>
-                            <button id="download-all-button">
-                                {% trans 'Download All Log Files' %}
-                            </button>
-                        </div>
+                    </form>
+                </div>
+            </div>
 
-                        <table id="log-entries-table"
-                               hx-get="{% url 'log_viewer:log_entries' %}"
-                               hx-trigger="load delay:0s"
-                               hx-target="#log-entries-data"
-                               hx-swap="outerHTML">
-                            <thead>
-                            <tr>
-                                <th scope="col">{% trans 'No.' %}</th>
-                                <th scope="col">{% trans 'Log entries' %}</th>
-                            </tr>
-                            </thead>
-                            <tbody id="log-entries-data">
-                            <tr>
-                                <td colspan="2">{% trans 'No entries!' %}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </form>
-                <div>
-                    <h2>{% trans 'Log Files' %}</h2>
-                    <table id="log-files-list">
+            <div class="ml-6">
+                <div class="bg-white shadow-md p-6">
+                    <h2 class="text-2xl font-bold">{% trans 'Log Files' %}</h2>
+                    <table id="log-files-list" class="w-full border-collapse">
                         <tbody>
                         <tr>
-                            <td colspan="2">{% trans 'No entries!' %}</td>
+                            <td colspan="2" class="border p-2">{% trans 'No entries!' %}</td>
                         </tr>
                         </tbody>
                     </table>
