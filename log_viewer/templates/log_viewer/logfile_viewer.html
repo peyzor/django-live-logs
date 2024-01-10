@@ -33,13 +33,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="django_live_logs">
-        <div id="content-main">
-            <div class="module filtered" id="changelist">
-                <form id="changelist-form" class="changelist-form-container">
-                    <div class="results">
-                        <div class="headers">
-                            <h1 class="pull-left">
+    <div>
+        <div>
+            <div>
+                <form>
+                    <div>
+                        <div>
+                            <h1>
                                 {% if custom_file_list_title %}
                                     {{ custom_file_list_title }}
                                 {% else %}
@@ -55,7 +55,6 @@
                                     hx-trigger="click"
                                     hx-target="#log-entries-table"
                                     hx-swap="outerHTML"
-                                    class="btn btn-outline-danger"
                                     hx-get="{% url 'log_viewer:toggle_live' 0 %}">
                                 {% trans 'Live' %}
                             </button>
@@ -65,22 +64,18 @@
                                     hx-trigger="click"
                                     hx-target="#log-entries-table"
                                     hx-swap="outerHTML"
-                                    class="btn btn-outline-primary"
                                     hx-get="{% url 'log_viewer:toggle_live' 1 %}">
                                 {% trans 'Stop' %}
                             </button>
-                            <button id="download-button"
-                                    class="btn btn-outline-primary">
+                            <button id="download-button">
                                 {% trans 'Download Log File' %}
                             </button>
-                            <button id="download-all-button"
-                                    class="btn btn-outline-primary">
+                            <button id="download-all-button">
                                 {% trans 'Download All Log Files' %}
                             </button>
                         </div>
 
                         <table id="log-entries-table"
-                               class="table"
                                hx-get="{% url 'log_viewer:log_entries' %}"
                                hx-trigger="load delay:0s"
                                hx-target="#log-entries-data"
@@ -102,7 +97,7 @@
                 </form>
                 <div>
                     <h2>{% trans 'Log Files' %}</h2>
-                    <table id="log-files-list" class="table" style="width:100%">
+                    <table id="log-files-list">
                         <tbody>
                         <tr>
                             <td colspan="2">{% trans 'No entries!' %}</td>
