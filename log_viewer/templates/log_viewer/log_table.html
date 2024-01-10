@@ -5,10 +5,15 @@
     {% for log_entry in log_entries %}
         <tr class="hover:bg-gray-100">
             <th scope="row" class="border p-2">{{ forloop.counter }}</th>
-            <td class="border p-2 relative">{{ log_entry }}
-                <buttton @click="copyText($event)" class="absolute top-0 right-0 p-2 focus:outline-none">
-                    <i class="fa-solid fa-copy copy-icon"></i>
-                </buttton>
+            <td class="border p-2 relative">
+                <div class="flex items-center">
+                    <div class="flex-grow min-w-0">
+                        {{ log_entry }}
+                    </div>
+                    <i @click="copyText($event)"
+                       class="fa-solid fa-copy copy-icon p-2 focus:outline-none">
+                    </i>
+                </div>
             </td>
         </tr>
     {% endfor %}
