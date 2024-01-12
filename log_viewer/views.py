@@ -174,11 +174,22 @@ def log_entries_view(request, *args, **kwargs):
     return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
 
 
-def toggle_live(request, event, *args, **kwargs):
+def toggle_live_view(request, event, *args, **kwargs):
     if int(event) == 1:
         return render(request, 'log_viewer/log_entries.html', status=HTMX_STOP_POLLING)
 
     return render(request, 'log_viewer/toggle_live.html', context={})
+
+
+def log_files_view(request, *args, **kwargs):
+    log_files_data = get_log_entries_context()['log_files']
+    log_files = []
+    for log_file_data in log_files_data:
+        for k, v in log_file_data.items():
+            log_files.append(v['display'])
+
+    context = {'log_files': log_files}
+    return render(request, 'log_viewer/log_files.html', context=context)
 
 
 log_json = LogJsonView.as_view()
