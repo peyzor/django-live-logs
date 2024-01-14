@@ -79,11 +79,7 @@
                 </div>
 
                 <table id="log-entries-table"
-                       class="mt-6 w-full border-collapse"
-                       hx-get="{% url 'log_viewer:log_entries' %}"
-                       hx-trigger="load delay:0s"
-                       hx-target="#log-entries-data"
-                       hx-swap="outerHTML">
+                       class="mt-6 w-full border-collapse">
                     <thead>
                     <tr>
                         <th scope="col" class="border p-2">{% trans 'No.' %}</th>

@@ -168,7 +168,7 @@ class LogViewerView(TemplateView):
         return context
 
 
-def log_entries_view(request, file_name, *args, **kwargs):
+def log_entries_view(request, *args, **kwargs):
     original_context = {'file_name': 'django_requests.log'}
     context = get_log_entries_context(original_context)
     return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
