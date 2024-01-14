@@ -37,7 +37,7 @@
 
 {% block content %}
     <div class="p-4 mx-auto">
-        <div class="flex">
+        <div x-data="{ live: false, isFileSelected: false }" class="flex">
             <div class="flex-1 bg-white shadow-md p-6">
                 <div class="mb-6">
                     <h1 class="text-3xl font-bold">
@@ -49,7 +49,7 @@
                     </h1>
                 </div>
 
-                <div x-data="{ live: false }" class="space-x-2">
+                <div class="space-x-2">
                     <button id="live-button"
                             class="bg-blue-500 text-white px-4 py-2 rounded"
                             hx-get="{% url 'log_viewer:toggle_live' 0 %}"
@@ -57,7 +57,7 @@
                             hx-trigger="click"
                             hx-swap="outerHTML"
                             @click="live = !live"
-                            x-show="!live">
+                            x-show="!live && isFileSelected">
                         {% trans 'Live' %}
                     </button>
                     <button id="stop-button"
@@ -67,14 +67,13 @@
                             hx-trigger="click"
                             hx-swap="outerHTML"
                             @click="live = !live"
-                            x-show="live">
+                            x-show="live && isFileSelected">
                         {% trans 'Stop' %}
                     </button>
-                    <button id="download-button" class="bg-green-500 text-white px-4 py-2 rounded">
+                    <button id="download-button"
+                            class="bg-green-500 text-white px-4 py-2 rounded"
+                            x-show="isFileSelected">
                         {% trans 'Download Log File' %}
-                    </button>
-                    <button id="download-all-button" class="bg-purple-500 text-white px-4 py-2 rounded">
-                        {% trans 'Download All Log Files' %}
                     </button>
                 </div>
 
