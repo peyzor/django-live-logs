@@ -1,7 +1,7 @@
 {% load static i18n %}
 
 <table id="log-entries-table"
-       hx-get="{% url 'log_viewer:log_entries' %}"
+       hx-get="{% url 'log_viewer:file_log_entries' file_name=log_file %}"
        hx-trigger="load delay:0s, every 1s"
        hx-target="#log-entries-data"
        hx-swap="outerHTML">

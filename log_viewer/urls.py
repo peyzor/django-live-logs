@@ -38,6 +38,6 @@ urlpatterns = [
     ),
     re_path(r'^log_entries/$', log_entries_view, name='log_entries'),
     re_path(r'^file_log_entries/(?P<file_name>[\w\.-]+)/$', file_log_entries_view, name='file_log_entries'),
-    re_path(r'^toggle_live/(?P<event>[0-9]+)$', toggle_live_view, name='toggle_live'),
+    re_path(r'^toggle_live/(?P<event>[0-9]+)/(?P<file_name>[\w\.-]+)/$', toggle_live_view, name='toggle_live'),
     re_path(r'^log_files/$', log_files_view, name='log_files'),
 ]

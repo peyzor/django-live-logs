@@ -180,11 +180,11 @@ def file_log_entries_view(request, file_name, *args, **kwargs):
     return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
 
 
-def toggle_live_view(request, event, *args, **kwargs):
+def toggle_live_view(request, event, file_name, *args, **kwargs):
     if int(event) == 1:
-        return render(request, 'log_viewer/log_entries.html', status=HTMX_STOP_POLLING)
+        return render(request, 'log_viewer/log_entries.html', context={'log_file': file_name}, status=HTMX_STOP_POLLING)
 
-    return render(request, 'log_viewer/toggle_live.html', context={})
+    return render(request, 'log_viewer/toggle_live.html', context={'log_file': file_name})
 
 
 def log_files_view(request, *args, **kwargs):

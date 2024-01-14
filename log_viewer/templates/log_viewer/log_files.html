@@ -11,7 +11,7 @@
                 hx-trigger="click"
                 hx-target="#log-entries-data"
                 hx-swap="outerHTML"
-                @click="isFileSelected = true">
+                @click="updateFileName($event); isFileSelected = true">
                 {{ log_file }}
             </td>
         </tr>
@@ -22,4 +22,19 @@
         <td colspan="2">{% trans 'No entries!' %}</td>
     </tr>
 {% endif %}
+
+<script>
+    function updateFileName(event) {
+        const td = event.target;
+        const fileName = td.textContent.trim();
+
+        const liveButton = document.getElementById('live-button');
+        const stopButton = document.getElementById('stop-button');
+        liveButton.setAttribute('hx-get', `/logs/toggle_live/0/${fileName}/`)
+        stopButton.setAttribute('hx-get', `/logs/toggle_live/1/${fileName}/`)
+
+        htmx.process(document.body)
+    }
+</script>
+
 </tbody>

@@ -36,8 +36,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="p-4 mx-auto">
-        <div x-data="{ live: false, isFileSelected: false }" class="flex">
+    <div x-data="{ live: false, isFileSelected: false }" class="p-4 mx-auto">
+        <div class="flex">
             <div class="flex-1 bg-white shadow-md p-6">
                 <div class="mb-6">
                     <h1 class="text-3xl font-bold">
@@ -52,7 +52,6 @@
                 <div class="space-x-2">
                     <button id="live-button"
                             class="bg-blue-500 text-white px-4 py-2 rounded"
-                            hx-get="{% url 'log_viewer:toggle_live' 0 %}"
                             hx-target="#log-entries-table"
                             hx-trigger="click"
                             hx-swap="outerHTML"
@@ -62,7 +61,6 @@
                     </button>
                     <button id="stop-button"
                             class="bg-red-500 text-white px-4 py-2 rounded"
-                            hx-get="{% url 'log_viewer:toggle_live' 1 %}"
                             hx-target="#log-entries-table"
                             hx-trigger="click"
                             hx-swap="outerHTML"
