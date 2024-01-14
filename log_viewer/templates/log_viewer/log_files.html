@@ -6,7 +6,13 @@
 {% if log_files %}
     {% for log_file in log_files %}
         <tr>
-            <td>{{ log_file }}</td>
+            <td class="log-file-name"
+                hx-get="{% url 'log_viewer:file_log_entries' file_name=log_file %}"
+                hx-trigger="click"
+                hx-target="#log-entries-data"
+                hx-swap="outerHTML">
+                {{ log_file }}
+            </td>
         </tr>
     {% endfor %}
 
