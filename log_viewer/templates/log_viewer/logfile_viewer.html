@@ -93,6 +93,16 @@
 
             <div class="ml-6 bg-white shadow-md p-6">
                 <h2 class="text-2xl font-bold">{% trans 'Log Files' %}</h2>
+                <form>
+                    {% csrf_token %}
+                    <input type="search"
+                           name="search"
+                           placeholder="{% trans 'Search...' %}"
+                           hx-get="{% url 'log_viewer:log_files' %}"
+                           hx-trigger="keyup changed, search"
+                           hx-target="#log-files-data"
+                           hx-indicator=".htmx-indicator">
+                </form>
                 <table id="log-files-table"
                        class="w-2/3 border-collapse"
                        hx-get="{% url 'log_viewer:log_files' %}"

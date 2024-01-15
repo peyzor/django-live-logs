@@ -13,7 +13,6 @@ from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
-
 from log_viewer import settings
 from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
 
@@ -169,11 +168,17 @@ class LogViewerView(TemplateView):
 
 class LogFileListView(TemplateView):
     def get(self, request, *args, **kwargs):
+        search = request.GET.get('search', '')
+
         log_files_data = get_log_entries_context()['log_files']
         filenames = []
         for log_file_data in log_files_data:
             for k, v in log_file_data.items():
-                filenames.append(v['display'])
+                filename = v['display']
+                if search and search.lower() not in filename:
+                    continue
+
+                filenames.append(filename)
 
         context = {'filenames': filenames}
         return render(request, 'log_viewer/log_file_list.html', context=context)
