@@ -13,7 +13,6 @@ from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
-from django_htmx.http import HTMX_STOP_POLLING
 
 from log_viewer import settings
 from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
@@ -184,11 +183,12 @@ class FileLogEntryListView(TemplateView):
 
 class ToggleLiveView(TemplateView):
     def get(self, request, event, file_name, *args, **kwargs):
+        htmx_stop_polling = 286
+        context = {'log_file': file_name}
         if int(event) == 1:
-            return render(request, 'log_viewer/log_entries.html', context={'log_file': file_name},
-                          status=HTMX_STOP_POLLING)
+            return render(request, 'log_viewer/end_live.html', context=context, status=htmx_stop_polling)
 
-        return render(request, 'log_viewer/toggle_live.html', context={'log_file': file_name})
+        return render(request, 'log_viewer/start_live.html', context=context)
 
 
 class LogFileListView(TemplateView):

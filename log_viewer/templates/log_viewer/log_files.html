@@ -30,8 +30,8 @@
 
         const liveButton = document.getElementById('live-button');
         const stopButton = document.getElementById('stop-button');
-        liveButton.setAttribute('hx-get', `/logs/toggle_live/0/${fileName}/`)
-        stopButton.setAttribute('hx-get', `/logs/toggle_live/1/${fileName}/`)
+        liveButton.setAttribute('hx-get', `/logs/toggle-live/0/${fileName}/`)
+        stopButton.setAttribute('hx-get', `/logs/toggle-live/1/${fileName}/`)
 
         htmx.process(document.body)
     }
