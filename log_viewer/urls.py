@@ -5,8 +5,8 @@ if django.VERSION >= (2, 0):
 else:
     from django.conf.urls import url as re_path
 
-from .views import (log_json, log_viewer, log_download, log_entries_view, toggle_live_view, log_files_view,
-                    file_log_entries_view)
+from .views import (log_json, log_viewer, log_download, LogEntryView, FileLogEntryListView, ToggleLiveView,
+                    LogFileListView)
 
 app_name = "log_viewer"
 
@@ -36,8 +36,8 @@ urlpatterns = [
         log_viewer,
         name="log_file_view",
     ),
-    re_path(r'^log_entries/$', log_entries_view, name='log_entries'),
-    re_path(r'^file_log_entries/(?P<file_name>[\w\.-]+)/$', file_log_entries_view, name='file_log_entries'),
-    re_path(r'^toggle_live/(?P<event>[0-9]+)/(?P<file_name>[\w\.-]+)/$', toggle_live_view, name='toggle_live'),
-    re_path(r'^log_files/$', log_files_view, name='log_files'),
+    re_path(r'^log-entries/$', LogEntryView.as_view(), name='log_entries'),
+    re_path(r'^file-log-entries/(?P<file_name>[\w\.-]+)/$', FileLogEntryListView.as_view(), name='file_log_entries'),
+    re_path(r'^toggle-live/(?P<event>[0-9]+)/(?P<file_name>[\w\.-]+)/$', ToggleLiveView.as_view(), name='toggle_live'),
+    re_path(r'^log-files/$', LogFileListView.as_view(), name='log_files'),
 ]
