@@ -167,11 +167,16 @@ class LogViewerView(TemplateView):
         return context
 
 
-class LogEntryView(TemplateView):
+class LogFileListView(TemplateView):
     def get(self, request, *args, **kwargs):
-        original_context = {'file_name': 'django_requests.log'}
-        context = get_log_entries_context(original_context)
-        return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
+        log_files_data = get_log_entries_context()['log_files']
+        filenames = []
+        for log_file_data in log_files_data:
+            for k, v in log_file_data.items():
+                filenames.append(v['display'])
+
+        context = {'filenames': filenames}
+        return render(request, 'log_viewer/log_file_list.html', context=context)
 
 
 class FileLogEntryListView(TemplateView):
@@ -190,18 +195,6 @@ class ToggleLiveView(TemplateView):
             return render(request, 'log_viewer/end_live.html', context=context, status=htmx_stop_polling)
 
         return render(request, 'log_viewer/start_live.html', context=context)
-
-
-class LogFileListView(TemplateView):
-    def get(self, request, *args, **kwargs):
-        log_files_data = get_log_entries_context()['log_files']
-        filenames = []
-        for log_file_data in log_files_data:
-            for k, v in log_file_data.items():
-                filenames.append(v['display'])
-
-        context = {'filenames': filenames}
-        return render(request, 'log_viewer/log_file_list.html', context=context)
 
 
 log_json = LogJsonView.as_view()
