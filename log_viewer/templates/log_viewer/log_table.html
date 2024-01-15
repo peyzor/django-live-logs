@@ -34,8 +34,9 @@
 
 <script>
     function copyText(event) {
-        const parentTd = event.target.closest('td');
-        const textToCopy = parentTd.textContent.trim();
+        const logEntryDiv = event.target.parentNode.previousElementSibling
+        const textToCopy = logEntryDiv.textContent.trim();
+
         navigator.clipboard.writeText(textToCopy);
 
         Alpine.store('copiedValue', textToCopy);
