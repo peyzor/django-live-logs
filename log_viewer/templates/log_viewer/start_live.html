@@ -1,7 +1,8 @@
 {% load static i18n %}
 
 <table id="log-entries-table"
-       hx-get="{% url 'log_viewer:file_log_entries' file_name=log_file %}"
+       class="mt-6 w-full border-collapse"
+       hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}"
        hx-trigger="load delay:0s, every 1s"
        hx-target="#log-entries-data"
        hx-swap="outerHTML">
@@ -13,7 +14,7 @@
     </thead>
     <tbody id="log-entries-data">
     <tr>
-        <td colspan="2">{% trans 'No entries!' %}</td>
+        <td colspan="2" class="border p-2">{% trans 'No entries!' %}</td>
     </tr>
     </tbody>
 </table>

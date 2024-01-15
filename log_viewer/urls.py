@@ -37,7 +37,7 @@ urlpatterns = [
         name="log_file_view",
     ),
     re_path(r'^log-entries/$', LogEntryView.as_view(), name='log_entries'),
-    re_path(r'^file-log-entries/(?P<file_name>[\w\.-]+)/$', FileLogEntryListView.as_view(), name='file_log_entries'),
-    re_path(r'^toggle-live/(?P<event>[0-9]+)/(?P<file_name>[\w\.-]+)/$', ToggleLiveView.as_view(), name='toggle_live'),
+    re_path(r'^file-log-entries/(?P<filename>[\w\.-]+)/$', FileLogEntryListView.as_view(), name='file_log_entries'),
+    re_path(r'^toggle-live/(?P<event>\d+)/(?P<filename>[\w\.-]+)/$', ToggleLiveView.as_view(), name='toggle_live'),
     re_path(r'^log-files/$', LogFileListView.as_view(), name='log_files'),
 ]

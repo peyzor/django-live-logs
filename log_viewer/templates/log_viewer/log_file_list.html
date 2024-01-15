@@ -3,16 +3,16 @@
 
 <tbody id="log-files-data">
 
-{% if log_files %}
-    {% for log_file in log_files %}
+{% if filenames %}
+    {% for filename in filenames %}
         <tr>
             <td class="log-file-name"
-                hx-get="{% url 'log_viewer:file_log_entries' file_name=log_file %}"
+                hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}"
                 hx-trigger="click"
                 hx-target="#log-entries-data"
                 hx-swap="outerHTML"
                 @click="updateFileName($event); isFileSelected = true">
-                {{ log_file }}
+                {{ filename }}
             </td>
         </tr>
     {% endfor %}

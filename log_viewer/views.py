@@ -175,17 +175,18 @@ class LogEntryView(TemplateView):
 
 
 class FileLogEntryListView(TemplateView):
-    def get(self, request, file_name, *args, **kwargs):
-        original_context = {'file_name': file_name}
+    def get(self, request, filename, *args, **kwargs):
+        original_context = {'file_name': filename}
         context = get_log_entries_context(original_context)
         return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
 
 
 class ToggleLiveView(TemplateView):
-    def get(self, request, event, file_name, *args, **kwargs):
+    def get(self, request, event, filename, *args, **kwargs):
         htmx_stop_polling = 286
-        context = {'log_file': file_name}
-        if int(event) == 1:
+        stop = 1
+        context = {'filename': filename}
+        if int(event) == stop:
             return render(request, 'log_viewer/end_live.html', context=context, status=htmx_stop_polling)
 
         return render(request, 'log_viewer/start_live.html', context=context)
@@ -194,13 +195,13 @@ class ToggleLiveView(TemplateView):
 class LogFileListView(TemplateView):
     def get(self, request, *args, **kwargs):
         log_files_data = get_log_entries_context()['log_files']
-        log_files = []
+        filenames = []
         for log_file_data in log_files_data:
             for k, v in log_file_data.items():
-                log_files.append(v['display'])
+                filenames.append(v['display'])
 
-        context = {'log_files': log_files}
-        return render(request, 'log_viewer/log_files.html', context=context)
+        context = {'filenames': filenames}
+        return render(request, 'log_viewer/log_file_list.html', context=context)
 
 
 log_json = LogJsonView.as_view()
