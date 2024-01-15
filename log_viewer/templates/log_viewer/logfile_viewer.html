@@ -104,7 +104,7 @@
                            hx-indicator=".htmx-indicator">
                 </form>
                 <table id="log-files-table"
-                       class="w-2/3 border-collapse"
+                       class="w-full border-collapse"
                        hx-get="{% url 'log_viewer:log_files' %}"
                        hx-trigger="load delay:0s"
                        hx-target="#log-files-data"
