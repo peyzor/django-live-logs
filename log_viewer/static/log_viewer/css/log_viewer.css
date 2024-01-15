@@ -5,3 +5,7 @@
 .log-file-name {
     cursor: pointer;
 }
+
+td {
+   word-break: break-all;
+}
