@@ -6,7 +6,7 @@
 {% if filenames %}
     {% for filename in filenames %}
         <tr>
-            <td class="log-file-name"
+            <td class="log-file-name w-64"
                 hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}"
                 hx-trigger="click"
                 hx-target="#log-entries-data"
