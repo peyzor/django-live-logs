@@ -20,7 +20,7 @@
 
 {% block extrastyle %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'log_viewer/css/log_viewer.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'log_viewer/css/output.css' %}">
 
     {% if custom_style_file %}
         <link type="text/css" href="{{ custom_style_file }}" rel="stylesheet">
@@ -32,7 +32,6 @@
     <script src={% static 'log_viewer/js/htmx.min.js' %}></script>
     <script src="{% static 'log_viewer/js/alpinejs.min.js' %}" defer></script>
     <script src="https://kit.fontawesome.com/7773a61110.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
 {% endblock %}
 
 {% block content %}
