@@ -5,8 +5,8 @@
 
 {% if filenames %}
     {% for filename in filenames %}
-        <tr>
-            <td class="log-file-name w-64"
+        <tr class="hover:bg-gray-100">
+            <td class="w-64 cursor-pointer break-all"
                 hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}"
                 hx-trigger="click"
                 hx-target="#log-entries-data"
@@ -18,8 +18,8 @@
     {% endfor %}
 
 {% else %}
-    <tr>
-        <td colspan="2">{% trans 'No entries!' %}</td>
+    <tr class="hover:bg-gray-100">
+        <td class="w-64" colspan="2">{% trans 'No entries!' %}</td>
     </tr>
 {% endif %}
 

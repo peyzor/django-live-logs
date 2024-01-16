@@ -5,14 +5,14 @@
     {% for log_entry in log_entries %}
         <tr class="hover:bg-gray-100">
             <th scope="row" class="border p-2">{{ forloop.counter }}</th>
-            <td class="border p-2 relative">
+            <td class="border p-2 relative break-words">
                 <div class="flex items-center">
                     <div class="flex-grow min-w-0">
                         {{ log_entry }}
                     </div>
                     <div x-data="{ showMsg: false }">
                         <i @click="copyText($event); showMsg = true; setTimeout(() => showMsg = false, 2000)"
-                           class="fa-solid fa-copy copy-icon p-2 focus:outline-none">
+                           class="fa-solid fa-copy copy-icon p-2 focus:outline-none cursor-pointer">
                         </i>
                         <div x-show="showMsg" @click.away="showMsg = false"
                              class="message fixed bottom-3 right-3 z-20 max-w-sm overflow-hidden bg-green-100 border
@@ -28,7 +28,7 @@
 
 {% else %}
     <tr class="hover:bg-gray-100">
-        <td colspan="2">{% trans 'No entries!' %}</td>
+        <td class="border p-2" colspan="2">{% trans 'No entries!' %}</td>
     </tr>
 {% endif %}
 
