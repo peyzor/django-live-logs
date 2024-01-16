@@ -6,13 +6,13 @@ from itertools import islice
 from django.conf import settings as django_settings
 from django.contrib.admin.utils import quote, unquote
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import Http404
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
+
 from log_viewer import settings
 from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
 
@@ -143,27 +143,12 @@ class LogDownloadView(TemplateView):
             return resp
 
 
-class LogViewerView(TemplateView):
-    """
-    LogViewerView class
-    :template_name: Name of the HTML template used to render the log files
-    """
-
-    template_name = "log_viewer/logfile_viewer.html"
-
-    def get_context_data(self, file_name=None, page=1, **kwargs):
-        """
-        Read and return log files to be showed in admin page
-
-        :param file_name: log file name
-        :param page: log viewer page
-        """
-        context = super(LogViewerView, self).get_context_data(**kwargs)
-        context["custom_file_list_title"] = settings.LOG_VIEWER_FILE_LIST_TITLE
-        context["custom_style_file"] = settings.LOG_VIEWER_FILE_LIST_STYLES
-        context["page_length"] = settings.LOG_VIEWER_PAGE_LENGTH
-        context["files_per_page"] = settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE
-        return context
+class HomeView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['custom_title'] = settings.LOG_VIEWER_FILE_LIST_TITLE
+        context['custom_style_file'] = settings.LOG_VIEWER_FILE_LIST_STYLES
+        return render(request, 'log_viewer/home.html', context=context)
 
 
 class LogFileListView(TemplateView):
@@ -188,7 +173,7 @@ class FileLogEntryListView(TemplateView):
     def get(self, request, filename, *args, **kwargs):
         original_context = {'file_name': filename}
         context = get_log_entries_context(original_context)
-        return render(request, 'log_viewer/log_table.html', {'log_entries': context['logs']})
+        return render(request, 'log_viewer/file_log_entry_list.html', {'log_entries': context['logs']})
 
 
 class ToggleLiveView(TemplateView):
@@ -203,5 +188,4 @@ class ToggleLiveView(TemplateView):
 
 
 log_json = LogJsonView.as_view()
-log_viewer = LogViewerView.as_view()
 log_download = LogDownloadView.as_view()
