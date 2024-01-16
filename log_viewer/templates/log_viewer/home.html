@@ -37,7 +37,7 @@
 {% block content %}
     <div x-data="{ live: false, isFileSelected: false }" class="p-4 mx-auto">
         <div class="flex">
-            <div class="flex-1 bg-white shadow-md p-6">
+            <div class="flex-none w-9/12 bg-white shadow-md p-6">
                 <div class="mb-6">
                     <h1 class="text-3xl font-bold">
                         {% if custom_file_list_title %}
@@ -90,8 +90,8 @@
                 </table>
             </div>
 
-            <div class="ml-6 bg-white shadow-md p-6">
-                <h2 class="pl-1 pr-2 py-3  text-2xl font-bold">{% trans 'Log Files' %}</h2>
+            <div class="flex-none w-3/12 ml-6 bg-white shadow-md p-6">
+                <h2 class="pl-1 pr-2 py-3 text-2xl font-bold">{% trans 'Log Files' %}</h2>
                 <form>
                     {% csrf_token %}
                     <input class="w-full py-2 px-4 border-2 border-gray-300 rounded-md focus:outline-none
@@ -101,7 +101,8 @@
                            placeholder="{% trans 'Search...' %}"
                            hx-get="{% url 'log_viewer:log_files' %}"
                            hx-trigger="keyup changed, search"
-                           hx-target="#log-files-data">
+                           hx-target="#log-files-data"
+                           hx-swap="outerHTML">
                 </form>
                 <table id="log-files-table"
                        class="w-full border-collapse mt-2"
@@ -112,11 +113,24 @@
 
                     <tbody id="log-files-data">
                     <tr>
-                        <td colspan="2" class="border p-2">{% trans 'No entries!' %}</td>
+                        <td colspan="2" class="border p-2 w-full">{% trans 'No entries!' %}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <script>
+        function updateFileName(event) {
+            const td = event.target;
+            const fileName = td.textContent.trim();
+
+            const liveButton = document.getElementById('live-button');
+            const stopButton = document.getElementById('stop-button');
+            liveButton.setAttribute('hx-get', `/logs/toggle-live/0/${fileName}/`)
+            stopButton.setAttribute('hx-get', `/logs/toggle-live/1/${fileName}/`)
+
+            htmx.process(document.body)
+        }
+    </script>
 {% endblock %}

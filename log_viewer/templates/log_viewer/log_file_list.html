@@ -1,12 +1,11 @@
 {% load static i18n %}
 
 
-<tbody id="log-files-data">
-
+<tbody id="log-files-data" class="w-full">
 {% if filenames %}
     {% for filename in filenames %}
         <tr class="hover:bg-gray-100">
-            <td class="w-64 cursor-pointer break-all"
+            <td class="w-full cursor-pointer break-all"
                 hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}"
                 hx-trigger="click"
                 hx-target="#log-entries-data"
@@ -19,22 +18,7 @@
 
 {% else %}
     <tr class="hover:bg-gray-100">
-        <td class="w-64" colspan="2">{% trans 'No entries!' %}</td>
+        <td class="w-full" colspan="2">{% trans 'No entries!' %}</td>
     </tr>
 {% endif %}
-
-<script>
-    function updateFileName(event) {
-        const td = event.target;
-        const fileName = td.textContent.trim();
-
-        const liveButton = document.getElementById('live-button');
-        const stopButton = document.getElementById('stop-button');
-        liveButton.setAttribute('hx-get', `/logs/toggle-live/0/${fileName}/`)
-        stopButton.setAttribute('hx-get', `/logs/toggle-live/1/${fileName}/`)
-
-        htmx.process(document.body)
-    }
-</script>
-
 </tbody>
