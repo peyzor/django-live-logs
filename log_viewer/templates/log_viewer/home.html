@@ -120,6 +120,7 @@
             </div>
         </div>
     </div>
+
     <script>
         function updateFileName(event) {
             const td = event.target;
@@ -132,5 +133,17 @@
 
             htmx.process(document.body)
         }
+
+        function copyText(event) {
+            const logEntryDiv = event.target.parentNode.previousElementSibling
+            const textToCopy = logEntryDiv.textContent.trim();
+
+            navigator.clipboard.writeText(textToCopy);
+
+            Alpine.store('copiedValue', textToCopy);
+        }
+
+        Alpine.data('copyText', copyText);
     </script>
+
 {% endblock %}

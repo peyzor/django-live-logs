@@ -32,17 +32,4 @@
     </tr>
 {% endif %}
 
-<script>
-    function copyText(event) {
-        const logEntryDiv = event.target.parentNode.previousElementSibling
-        const textToCopy = logEntryDiv.textContent.trim();
-
-        navigator.clipboard.writeText(textToCopy);
-
-        Alpine.store('copiedValue', textToCopy);
-    }
-
-    Alpine.data('copyText', copyText);
-</script>
-
 </tbody>
