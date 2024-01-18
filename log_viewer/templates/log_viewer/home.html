@@ -100,7 +100,7 @@
                            name="search"
                            placeholder="{% trans 'Search...' %}"
                            hx-get="{% url 'log_viewer:log_files' %}"
-                           hx-trigger="keyup changed, search"
+                           hx-trigger="input changed delay:300ms, search"
                            hx-target="#log-files-data"
                            hx-swap="outerHTML">
                 </form>
