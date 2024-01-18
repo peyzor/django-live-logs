@@ -107,7 +107,7 @@
                 <table id="log-files-table"
                        class="w-full border-collapse mt-2"
                        hx-get="{% url 'log_viewer:log_files' %}"
-                       hx-trigger="load delay:0s"
+                       hx-trigger="load"
                        hx-target="#log-files-data"
                        hx-swap="outerHTML">
 
