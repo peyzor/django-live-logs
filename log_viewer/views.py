@@ -6,6 +6,7 @@ from itertools import islice
 from django.conf import settings as django_settings
 from django.contrib.admin.utils import quote, unquote
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -14,7 +15,8 @@ from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
 
 from log_viewer import settings
-from log_viewer.utils import get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context
+from log_viewer.utils import (get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context,
+                              get_log_entries)
 
 
 class TemplateView(_TemplateView):
@@ -171,9 +173,22 @@ class LogFileListView(TemplateView):
 
 class FileLogEntryListView(TemplateView):
     def get(self, request, filename, *args, **kwargs):
-        original_context = {'file_name': filename}
-        context = get_log_entries_context(original_context)
-        return render(request, 'log_viewer/file_log_entry_list.html', {'log_entries': context['logs']})
+        log_entries = get_log_entries(filename)
+
+        max_lines = 1000
+        paginator = Paginator(list(islice(log_entries, max_lines)), 20)
+
+        page = request.GET.get('page', 1)
+
+        try:
+            log_entries = paginator.page(page)
+        except PageNotAnInteger:
+            log_entries = paginator.page(1)
+        except EmptyPage:
+            log_entries = paginator.page(paginator.num_pages)
+
+        context = {'log_entries': log_entries}
+        return render(request, 'log_viewer/file_log_entry_list.html', context)
 
 
 class ToggleLiveView(TemplateView):
