@@ -187,7 +187,7 @@ class FileLogEntryListView(TemplateView):
         except EmptyPage:
             log_entries = paginator.page(paginator.num_pages)
 
-        context = {'log_entries': log_entries}
+        context = {'log_entries': log_entries, 'filename': filename}
         return render(request, 'log_viewer/file_log_entry_list.html', context)
 
 
