@@ -2,39 +2,47 @@
 <tr>
     <td colspan="2">
         <div class="pagination">
-                <span class="step-links">
-                    {% if log_entries.has_previous %}
-                        <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page=1"
-                              hx-target="#log-entries-data"
-                              hx-swap="outerHTML">
-                            &laquo; first
-                        </span>
-                        <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.previous_page_number }}"
-                              hx-target="#log-entries-data"
-                              hx-swap="outerHTML">
-                            previous
-                        </span>
-                    {% endif %}
+            <span class="step-links">
+                {% if log_entries.has_previous %}
+                    <span class="cursor-pointer"
+                          hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.previous_page_number }}"
+                          hx-target="#log-entries-data"
+                          hx-swap="outerHTML">
+                        previous
+                    </span>
+                {% endif %}
 
-                    <span class="current"> Page {{ log_entries.number }} of {{ log_entries.paginator.num_pages }}.</span>
-
-                    {% if log_entries.has_next %}
+                {% for page_num in log_entries.paginator.page_range %}
+                    {% if page_num == log_entries.number %}
+                        <span class="current">{{ page_num }}</span>
+                    {% elif page_num == 1 or page_num == log_entries.paginator.num_pages %}
                         <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.next_page_number }}"
+                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ page_num }}"
                               hx-target="#log-entries-data"
                               hx-swap="outerHTML">
-                            next
+                            {{ page_num }}
                         </span>
+                    {% elif page_num > log_entries.number|add:'-3' and page_num < log_entries.number|add:'3' %}
                         <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.paginator.num_pages }}"
+                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ page_num }}"
                               hx-target="#log-entries-data"
                               hx-swap="outerHTML">
-                            last &raquo;
+                            {{ page_num }}
                         </span>
+                    {% elif page_num == log_entries.number|add:'-3' or page_num == log_entries.number|add:'3' %}
+                        <span>...</span>
                     {% endif %}
-                </span>
+                {% endfor %}
+
+                {% if log_entries.has_next %}
+                    <span class="cursor-pointer"
+                          hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.next_page_number }}"
+                          hx-target="#log-entries-data"
+                          hx-swap="outerHTML">
+                        next
+                    </span>
+                {% endif %}
+            </span>
         </div>
     </td>
 </tr>
