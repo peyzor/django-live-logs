@@ -34,44 +34,4 @@
 
 </tbody>
 
-<tfoot id="log-entries-footer" hx-swap-oob="true">
-<tr>
-    <td colspan="2">
-        <div class="pagination">
-                <span class="step-links">
-                    {% if log_entries.has_previous %}
-                        <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page=1"
-                              hx-target="#log-entries-data"
-                              hx-swap="outerHTML">
-                            &laquo; first
-                        </span>
-                        <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.previous_page_number }}"
-                              hx-target="#log-entries-data"
-                              hx-swap="outerHTML">
-                            previous
-                        </span>
-                    {% endif %}
-
-                    <span class="current"> Page {{ log_entries.number }} of {{ log_entries.paginator.num_pages }}.</span>
-
-                    {% if log_entries.has_next %}
-                        <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.next_page_number }}"
-                              hx-target="#log-entries-data"
-                              hx-swap="outerHTML">
-                            next
-                        </span>
-                        <span class="cursor-pointer"
-                              hx-get="{% url 'log_viewer:file_log_entries' filename=filename %}?page={{ log_entries.paginator.num_pages }}"
-                              hx-target="#log-entries-data"
-                              hx-swap="outerHTML">
-                            last &raquo;
-                        </span>
-                    {% endif %}
-                </span>
-        </div>
-    </td>
-</tr>
-</tfoot>
+{% include 'log_viewer/pagination.html' %}
