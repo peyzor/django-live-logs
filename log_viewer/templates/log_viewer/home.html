@@ -104,6 +104,7 @@
                        hx-trigger="input changed delay:300ms, search"
                        hx-target="#log-files-data"
                        hx-swap="outerHTML">
+
                 <table id="log-files-table"
                        class="w-full border-collapse mt-2"
                        hx-get="{% url 'log_viewer:log_files' %}"
@@ -128,8 +129,8 @@
 
             const liveButton = document.getElementById('live-button');
             const stopButton = document.getElementById('stop-button');
-            liveButton.setAttribute('hx-get', `/logs/toggle-live/0/${fileName}/`)
-            stopButton.setAttribute('hx-get', `/logs/toggle-live/1/${fileName}/`)
+            liveButton.setAttribute('hx-get', `/logs/start-live/${fileName}/`)
+            stopButton.setAttribute('hx-get', `/logs/stop-live/${fileName}/`)
 
             htmx.process(document.body)
         }

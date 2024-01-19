@@ -191,15 +191,17 @@ class FileLogEntryListView(TemplateView):
         return render(request, 'log_viewer/file_log_entry_list.html', context)
 
 
-class ToggleLiveView(TemplateView):
-    def get(self, request, event, filename, *args, **kwargs):
-        htmx_stop_polling = 286
-        stop = 1
+class StartLiveView(TemplateView):
+    def get(self, request, filename, *args, **kwargs):
         context = {'filename': filename}
-        if int(event) == stop:
-            return render(request, 'log_viewer/end_live.html', context=context, status=htmx_stop_polling)
-
         return render(request, 'log_viewer/start_live.html', context=context)
+
+
+class StopLiveView(TemplateView):
+    def get(self, request, filename, *args, **kwargs):
+        htmx_stop_polling = 286
+        context = {'filename': filename}
+        return render(request, 'log_viewer/stop_live.html', context=context, status=htmx_stop_polling)
 
 
 log_json = LogJsonView.as_view()
