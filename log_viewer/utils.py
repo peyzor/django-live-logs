@@ -53,3 +53,10 @@ def get_log_files(directory):
                 log_files.append(entry)
 
     return log_files
+
+
+def get_log_file(directory, filename):
+    log_files = get_log_files(directory)
+    for log_file in log_files:
+        if log_file.name == filename:
+            return log_file

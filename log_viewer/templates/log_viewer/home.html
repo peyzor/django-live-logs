@@ -67,6 +67,13 @@
                             x-show="live && isFileSelected">
                         {% trans 'Stop' %}
                     </button>
+                    <a id="download-link">
+                        <button id="download-button"
+                                class="bg-green-500 text-white px-4 py-2 rounded"
+                                x-show="isFileSelected">
+                            {% trans 'Download' %}
+                        </button>
+                    </a>
                 </div>
 
                 <table id="log-entries-table"
@@ -124,8 +131,10 @@
 
             const liveButton = document.getElementById('live-button');
             const stopButton = document.getElementById('stop-button');
+            const downloadLink = document.getElementById('download-link');
             liveButton.setAttribute('hx-get', `/logs/start-live/${fileName}/`)
             stopButton.setAttribute('hx-get', `/logs/stop-live/${fileName}/`)
+            downloadLink.setAttribute('href', `/logs/download/${fileName}/`)
 
             htmx.process(document.body)
         }

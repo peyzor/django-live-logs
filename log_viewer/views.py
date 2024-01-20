@@ -1,13 +1,17 @@
+import io
+import os
+import zipfile
 from itertools import islice
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView as _TemplateView
 
-from log_viewer import settings
-from log_viewer.utils import get_log_entries, get_log_files
+from . import settings
+from .utils import get_log_entries, get_log_files, get_log_file
 
 
 class TemplateView(_TemplateView):
@@ -73,3 +77,19 @@ class StopLiveView(TemplateView):
         htmx_stop_polling = 286
         context = {'filename': filename}
         return render(request, 'log_viewer/stop_live.html', context=context, status=htmx_stop_polling)
+
+
+class DownloadLogFileView(TemplateView):
+    def get(self, request, filename, *args, **kwargs):
+        log_file = get_log_file(settings.LOG_VIEWER_FILES_DIR, filename)
+        if not log_file:
+            raise Http404
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
+            zip_file.write(log_file.path)
+
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(filename)}.zip"'
+        response.write(zip_buffer.getvalue())
+        return response
