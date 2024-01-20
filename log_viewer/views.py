@@ -15,8 +15,7 @@ from django.utils.timezone import localtime, now
 from django.views.generic import TemplateView as _TemplateView
 
 from log_viewer import settings
-from log_viewer.utils import (get_log_files, readlines_reverse, JSONResponseMixin, get_log_entries_context,
-                              get_log_entries)
+from log_viewer.utils import (get_log_files_old, readlines_reverse, JSONResponseMixin, get_log_entries, get_log_files)
 
 
 class TemplateView(_TemplateView):
@@ -45,8 +44,8 @@ class LogJsonView(JSONResponseMixin, TemplateView):
         context["next_page"] = page + 1
         context["log_files"] = []
 
-        log_file_data = get_log_files(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
-                                      1, )
+        log_file_data = get_log_files_old(settings.LOG_VIEWER_FILES_DIR,
+                                          settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE, 1)
         context["next_page_files"] = log_file_data["next_page_files"]
         context["last_files"] = log_file_data["last_files"]
 
@@ -107,7 +106,8 @@ class LogDownloadView(TemplateView):
         # file_name = context.get('file_name', None)
         file_name = self.request.GET.get("file_name", None)
         log_file_result = \
-            get_log_files(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE, 1, )["logs"]
+            get_log_files_old(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE, 1)[
+                "logs"]
 
         if file_name:
             file_path = unquote(file_name)
@@ -157,15 +157,14 @@ class LogFileListView(TemplateView):
     def get(self, request, *args, **kwargs):
         search = request.GET.get('search', '')
 
-        log_files_data = get_log_entries_context()['log_files']
-        filenames = []
-        for log_file_data in log_files_data:
-            for k, v in log_file_data.items():
-                filename = v['display']
-                if search and search.lower() not in filename:
-                    continue
+        log_files = get_log_files(settings.LOG_VIEWER_FILES_DIR)
 
-                filenames.append(filename)
+        filenames = []
+        for f in log_files:
+            if search and search.lower() not in f.name:
+                continue
+
+            filenames.append(f.name)
 
         context = {'filenames': filenames}
         return render(request, 'log_viewer/log_file_list.html', context=context)

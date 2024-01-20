@@ -1,12 +1,11 @@
-import types
 import tempfile
-from itertools import islice
+import types
 
-from django.urls import reverse
-from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.test import TestCase, Client
+from django.urls import reverse
 
-from ..utils import get_log_files, readlines_reverse
+from ..utils import get_log_files_old, readlines_reverse
 
 User = get_user_model()
 
@@ -38,7 +37,7 @@ class TestLogsViewer(TestCase):
     def test_get_log_files(self):
         with tempfile.TemporaryDirectory() as log_dir:
             open("%s/default.log" % log_dir, "a").close()
-            result = get_log_files(log_dir, 1, 1)
+            result = get_log_files_old(log_dir, 1, 1)
             self.assertEqual(
                 result,
                 {
@@ -65,7 +64,7 @@ class TestLogsViewer(TestCase):
                 qfile.close()
 
             with open(
-                "%s/default.log" % log_dir, encoding="utf8", errors="ignore"
+                    "%s/default.log" % log_dir, encoding="utf8", errors="ignore"
             ) as qfile:
                 lines = readlines_reverse(qfile, exclude=None)
                 lines_string = " ".join(map(str, lines))

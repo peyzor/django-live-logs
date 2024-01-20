@@ -2,6 +2,7 @@ import os
 import re
 from fnmatch import fnmatch
 from itertools import islice
+from os.path import isfile
 
 from django.contrib.admin.utils import quote, unquote
 from django.http import JsonResponse
@@ -9,14 +10,14 @@ from django.http import JsonResponse
 from . import settings
 
 
-def get_log_files(directory, max_items_per_page, current_page):
+def get_log_files_old(directory, max_items_per_page, current_page):
     """
     Function to get the logs file names.
     :param `directory` is string of base logs path.
     :param `max_items_per_page` is int max items to show per-page.
     :param `current_page` is int of current page.
     :return dict of logs files data.
-    >>> get_log_files("logs", 2, 1)
+    >>> get_log_files_old("logs",2,1)
     {
       "logs": {
         "": [
@@ -132,7 +133,8 @@ def get_log_entries_context(original_context=None):
     context['next_page'] = page + 1
     context['log_files'] = []
 
-    log_file_data = get_log_files(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE, 1, )
+    log_file_data = get_log_files_old(settings.LOG_VIEWER_FILES_DIR, settings.LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE,
+                                      1)
     context['next_page_files'] = log_file_data['next_page_files']
     context['last_files'] = log_file_data['last_files']
 
@@ -203,3 +205,16 @@ def get_log_entries(filename):
         log_entries = list(islice(reverse_readlines(file, exclude=settings.LOG_VIEWER_EXCLUDE_TEXT_PATTERN), 1000))
 
     return log_entries
+
+
+def get_log_files(directory):
+    log_files = []
+    with os.scandir(directory) as entries:
+        for entry in entries:
+            matched = fnmatch(entry.name, settings.LOG_VIEWER_FILES_PATTERN)
+            specified = entry.name in settings.LOG_VIEWER_FILES
+
+            if isfile(entry) and (matched or specified):
+                log_files.append(entry)
+
+    return log_files
