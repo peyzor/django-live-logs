@@ -42,21 +42,14 @@ def get_log_entries(filename):
     return log_entries
 
 
-def get_log_files(directory):
-    log_files = []
+def get_log_file_names(directory):
+    filenames = []
     with os.scandir(directory) as entries:
         for entry in entries:
             matched = fnmatch(entry.name, settings.LOG_VIEWER_FILES_PATTERN)
             specified = entry.name in settings.LOG_VIEWER_FILES
 
             if isfile(entry) and (matched or specified):
-                log_files.append(entry)
+                filenames.append(entry.name)
 
-    return log_files
-
-
-def get_log_file(directory, filename):
-    log_files = get_log_files(directory)
-    for log_file in log_files:
-        if log_file.name == filename:
-            return log_file
+    return filenames

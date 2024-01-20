@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView as _TemplateView
 
 from . import settings
-from .utils import get_log_entries, get_log_files, get_log_file
+from .utils import get_log_entries, get_log_file_names
 
 
 class TemplateView(_TemplateView):
@@ -33,14 +33,14 @@ class LogFileListView(TemplateView):
     def get(self, request, *args, **kwargs):
         search = request.GET.get('search', '')
 
-        log_files = get_log_files(settings.LOG_VIEWER_FILES_DIR)
+        log_filenames = get_log_file_names(settings.LOG_VIEWER_FILES_DIR)
 
         filenames = []
-        for f in log_files:
-            if search and search.lower() not in f.name:
+        for fn in log_filenames:
+            if search and search.lower() not in fn:
                 continue
 
-            filenames.append(f.name)
+            filenames.append(fn)
 
         context = {'filenames': filenames}
         return render(request, 'log_viewer/log_file_list.html', context=context)
@@ -48,6 +48,9 @@ class LogFileListView(TemplateView):
 
 class FileLogEntryListView(TemplateView):
     def get(self, request, filename, *args, **kwargs):
+        if filename not in get_log_file_names(settings.LOG_VIEWER_FILES_DIR):
+            raise Http404
+
         log_entries = get_log_entries(filename)
 
         max_lines = 1000
@@ -81,15 +84,15 @@ class StopLiveView(TemplateView):
 
 class DownloadLogFileView(TemplateView):
     def get(self, request, filename, *args, **kwargs):
-        log_file = get_log_file(settings.LOG_VIEWER_FILES_DIR, filename)
-        if not log_file:
+        if filename not in get_log_file_names(settings.LOG_VIEWER_FILES_DIR):
             raise Http404
 
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
-            zip_file.write(log_file.path)
+            zip_file.write(os.path.join(settings.LOG_VIEWER_FILES_DIR, filename))
 
+        basename, _ = os.path.splitext(filename)
         response = HttpResponse(content_type='application/zip')
-        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(filename)}.zip"'
+        response['Content-Disposition'] = f'attachment; filename="{basename}.zip"'
         response.write(zip_buffer.getvalue())
         return response
